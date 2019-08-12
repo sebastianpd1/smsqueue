@@ -42,6 +42,9 @@ def addNewPerson():
         raise APIException('You need to specify the email', status_code=400)
     if 'phone' not in body:
         raise APIException('You need to specify the phone number', status_code=400)
+    if body["phone"][-1] != "+1" and len(body["phone"]) != 11:
+        raise APIException('Phone number should have 11 numbers and start with +!', status_code=400)
+
     queue.enqueue(body)
     return "ok", 200
 
