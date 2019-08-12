@@ -28,16 +28,16 @@ def sitemap():
     return generate_sitemap(app)
 
 
-# @app.route("/sms", methods=['GET', 'POST'])
-# def sms_ahoy_reply():
-#     """Respond to incoming messages with a friendly SMS."""
-#     # Start our response
-#     resp = MessagingResponse()
+@app.route("/sms", methods=['GET', 'POST'])
+def sms_ahoy_reply():
+    """Respond to incoming messages with a friendly SMS."""
+    # Start our response
+    resp = MessagingResponse()
 
-#     # Add a message
-#     resp.message("Ahoy! Thanks so much for your message.")
+    # Add a message
+    resp.message("Ahoy! Thanks so much for your message.")
 
-#     return str(resp)
+    return str(resp)
 
 
 @app.route('/person', methods=['POST', 'GET'])
