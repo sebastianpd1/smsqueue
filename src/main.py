@@ -7,9 +7,9 @@ from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
-from models import db, Person
+from models import db, Person, Queue
 from twilio.twiml.messaging_response import MessagingResponse
-
+from send_sms import sendSms
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -18,6 +18,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 MIGRATE = Migrate(app, db)
 db.init_app(app)
 CORS(app)
+queue = Queue()
 
 @app.errorhandler(APIException)
 def handle_invalid_usage(error):
@@ -27,6 +28,32 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
+@app.route('/new', methods=['POST'])
+
+def addNewPerson():
+
+    body = request.get_json()
+
+    if body is None:
+        raise APIException("You need to specify the request body as a json object", status_code=400)
+    if 'name' not in body:
+        raise APIException('You need to specify the name', status_code=400)
+    if 'email' not in body:
+        raise APIException('You need to specify the email', status_code=400)
+    if 'phone' not in body:
+        raise APIException('You need to specify the phone number', status_code=400)
+    queue.enqueue(body)
+    return "ok", 200
+
+
+@app.route('/next')
+def setNextPerson():
+    sendSms(queue.dequeue())
+
+@app.route('/all')
+def getAllPeople():
+    return queue.get_queue()
+
 
 @app.route("/sms", methods=['GET', 'POST'])
 def sms_ahoy_reply():
@@ -35,7 +62,7 @@ def sms_ahoy_reply():
     resp = MessagingResponse()
 
     # Add a message
-    resp.message("Voy a escribir algo mas bonito y mas gay pa q la felipa este feliz.")
+    resp.message("wdfedf")
 
     return str(resp)
 

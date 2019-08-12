@@ -67,9 +67,9 @@ if "email" in body:
     user1.email = body["email"]
 db.session.commit()
 ```
- 
+
  ### Delete data
- 
+
  ```py
  user1 = Person.query.get(person_id)
 if user1 is None:
