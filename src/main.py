@@ -35,7 +35,7 @@ def sms_ahoy_reply():
     resp = MessagingResponse()
 
     # Add a message
-    resp.message("Ahoy! Thanks so much for your message.")
+    resp.message("Voy a escribir algo mas bonito y mas gay pa q la felipa este feliz.")
 
     return str(resp)
 
