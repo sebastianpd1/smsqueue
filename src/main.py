@@ -42,8 +42,8 @@ def addNewPerson():
         raise APIException('You need to specify the email', status_code=400)
     if 'phone' not in body:
         raise APIException('You need to specify the phone number', status_code=400)
-    if body["phone"][-1] != "+1" and len(body["phone"]) != 11:
-        raise APIException('Phone number should have 11 numbers and start with +!', status_code=400)
+    if body["phone"][-1] != "+1" and len(body["phone"]) != 12:
+        raise APIException('Phone number should have 11 numbers and start with +1', status_code=400)
 
     queue.enqueue(body)
     return "ok", 200
@@ -52,10 +52,11 @@ def addNewPerson():
 @app.route('/next')
 def setNextPerson():
     sendSms(queue.dequeue())
+    return "ok", 200
 
 @app.route('/all')
 def getAllPeople():
-    return queue.get_queue()
+    return jsonify(queue.get_queue())
 
 
 @app.route("/sms", methods=['GET', 'POST'])
